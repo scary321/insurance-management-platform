@@ -15,7 +15,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    preDeployCommand: python init_db.py
+    buildCommand: pip install -r requirements.txt && python init_db.py
     startCommand: gunicorn wsgi:app
     healthCheckPath: /api/health
     envVars:
