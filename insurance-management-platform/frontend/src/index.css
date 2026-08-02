@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    @apply bg-paper text-ink font-sans;
+    font-feature-settings: "cv11", "ss01";
+  }
+  /* tabular figures everywhere numbers matter */
+  .tnum { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+  .card { @apply bg-white border border-line rounded-xl shadow-card; }
+  .label { @apply text-[11px] font-mono uppercase tracking-[0.14em] text-ink/45; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
+           transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal/40 disabled:opacity-50;
+  }
+  .btn-primary { @apply btn bg-teal text-white hover:bg-teal-600; }
+  .btn-ghost   { @apply btn bg-transparent text-ink/70 hover:bg-ink/5; }
+  .btn-line    { @apply btn border border-line bg-white text-ink/80 hover:border-teal hover:text-teal; }
+  .input {
+    @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink
+           placeholder:text-ink/35 focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20;
+  }
+  .th { @apply text-left text-[11px] font-mono uppercase tracking-[0.12em] text-ink/45 font-medium px-4 py-3; }
+  .td { @apply px-4 py-3 text-sm text-ink/85 border-t border-line; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

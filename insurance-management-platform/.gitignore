@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.db
+.env
+
+# Node
+node_modules/
+dist/
+.env.local
+
+# App artifacts
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/reports/*
+!backend/reports/.gitkeep

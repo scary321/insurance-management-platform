@@ -1,0 +1,353 @@
+{
+  "info": {
+    "name": "Insurance Management Platform",
+    "description": "Full API for the Insurance Management Platform. Run **Auth > Login (admin)** first — it auto-saves the JWT to the `token` collection variable, so every other request is pre-authorized. Change `baseUrl` for deployed environments.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" },
+    { "key": "customerId", "value": "1" },
+    { "key": "policyId", "value": "1" },
+    { "key": "claimId", "value": "1" },
+    { "key": "documentId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.data && body.data.token) {",
+                  "  pm.collectionVariables.set('token', body.data.token);",
+                  "  console.log('Token saved to collection variable.');",
+                  "}",
+                  "pm.test('login ok', () => pm.response.code === 200);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@insure.dev\",\n  \"password\": \"admin123\"\n}" }
+          }
+        },
+        {
+          "name": "Register (customer self-signup)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Customer\",\n  \"email\": \"newcustomer@example.com\",\n  \"password\": \"secret123\"\n}" }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "auth", "me"] }
+          }
+        },
+        {
+          "name": "List users (admin)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/users", "host": ["{{baseUrl}}"], "path": ["api", "auth", "users"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/customers?q=&page=1&per_page=10",
+              "host": ["{{baseUrl}}"], "path": ["api", "customers"],
+              "query": [
+                { "key": "q", "value": "" },
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/customers", "host": ["{{baseUrl}}"], "path": ["api", "customers"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"phone\": \"+1-201-555-0000\",\n  \"dob\": \"1990-12-10\",\n  \"address\": \"1 Analytical Way, NJ\"\n}" }
+          }
+        },
+        {
+          "name": "Get customer",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/customers/{{customerId}}", "host": ["{{baseUrl}}"], "path": ["api", "customers", "{{customerId}}"] }
+          }
+        },
+        {
+          "name": "Update customer",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/customers/{{customerId}}", "host": ["{{baseUrl}}"], "path": ["api", "customers", "{{customerId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+1-201-555-9999\"\n}" }
+          }
+        },
+        {
+          "name": "Customer history",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/customers/{{customerId}}/history", "host": ["{{baseUrl}}"], "path": ["api", "customers", "{{customerId}}", "history"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "List policies",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/policies?status=&page=1&per_page=10",
+              "host": ["{{baseUrl}}"], "path": ["api", "policies"],
+              "query": [
+                { "key": "status", "value": "", "description": "active | expired | cancelled" },
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/policies", "host": ["{{baseUrl}}"], "path": ["api", "policies"] },
+            "body": { "mode": "raw", "raw": "{\n  \"customer_id\": {{customerId}},\n  \"policy_type\": \"Health\",\n  \"premium_amount\": 1200,\n  \"start_date\": \"2026-01-01\",\n  \"end_date\": \"2027-01-01\"\n}" }
+          }
+        },
+        {
+          "name": "Get policy",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/policies/{{policyId}}", "host": ["{{baseUrl}}"], "path": ["api", "policies", "{{policyId}}"] }
+          }
+        },
+        {
+          "name": "Renew policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/policies/{{policyId}}/renew", "host": ["{{baseUrl}}"], "path": ["api", "policies", "{{policyId}}", "renew"] },
+            "body": { "mode": "raw", "raw": "{\n  \"end_date\": \"2028-01-01\",\n  \"premium_amount\": 1300\n}" }
+          }
+        },
+        {
+          "name": "Cancel policy",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/policies/{{policyId}}/cancel", "host": ["{{baseUrl}}"], "path": ["api", "policies", "{{policyId}}", "cancel"] }
+          }
+        },
+        {
+          "name": "Expiring soon",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/policies/expiring?days=30",
+              "host": ["{{baseUrl}}"], "path": ["api", "policies", "expiring"],
+              "query": [{ "key": "days", "value": "30" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Claims",
+      "item": [
+        {
+          "name": "List claims",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/claims?status=&page=1&per_page=10",
+              "host": ["{{baseUrl}}"], "path": ["api", "claims"],
+              "query": [
+                { "key": "status", "value": "", "description": "pending | approved | rejected" },
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit claim",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/claims", "host": ["{{baseUrl}}"], "path": ["api", "claims"] },
+            "body": { "mode": "raw", "raw": "{\n  \"policy_id\": {{policyId}},\n  \"claim_amount\": 500,\n  \"reason\": \"Accidental damage to insured item\"\n}" }
+          }
+        },
+        {
+          "name": "Get claim",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/claims/{{claimId}}", "host": ["{{baseUrl}}"], "path": ["api", "claims", "{{claimId}}"] }
+          }
+        },
+        {
+          "name": "Approve claim",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/claims/{{claimId}}/approve", "host": ["{{baseUrl}}"], "path": ["api", "claims", "{{claimId}}", "approve"] },
+            "body": { "mode": "raw", "raw": "{\n  \"review_note\": \"Verified and approved\"\n}" }
+          }
+        },
+        {
+          "name": "Reject claim",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/claims/{{claimId}}/reject", "host": ["{{baseUrl}}"], "path": ["api", "claims", "{{claimId}}", "reject"] },
+            "body": { "mode": "raw", "raw": "{\n  \"review_note\": \"Insufficient documentation\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Premiums",
+      "item": [
+        {
+          "name": "List payments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/premiums?status=&page=1&per_page=10",
+              "host": ["{{baseUrl}}"], "path": ["api", "premiums"],
+              "query": [
+                { "key": "status", "value": "", "description": "paid | pending | overdue" },
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Record payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/premiums", "host": ["{{baseUrl}}"], "path": ["api", "premiums"] },
+            "body": { "mode": "raw", "raw": "{\n  \"policy_id\": {{policyId}},\n  \"amount\": 100,\n  \"payment_status\": \"paid\",\n  \"due_date\": \"2026-02-01\"\n}" }
+          }
+        },
+        {
+          "name": "Overdue payments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/premiums/overdue", "host": ["{{baseUrl}}"], "path": ["api", "premiums", "overdue"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "List documents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/documents?customer_id={{customerId}}",
+              "host": ["{{baseUrl}}"], "path": ["api", "documents"],
+              "query": [{ "key": "customer_id", "value": "{{customerId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Upload document",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/documents", "host": ["{{baseUrl}}"], "path": ["api", "documents"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": [] },
+                { "key": "customer_id", "value": "{{customerId}}", "type": "text" },
+                { "key": "doc_type", "value": "identity", "type": "text" }
+              ]
+            },
+            "description": "Select a local file for the `file` field. Allowed: pdf, png, jpg, jpeg, doc, docx."
+          }
+        },
+        {
+          "name": "Download document",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/documents/{{documentId}}/download", "host": ["{{baseUrl}}"], "path": ["api", "documents", "{{documentId}}", "download"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Dashboard summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/reports/summary", "host": ["{{baseUrl}}"], "path": ["api", "reports", "summary"] }
+          }
+        },
+        {
+          "name": "Monthly PDF",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/reports/monthly.pdf", "host": ["{{baseUrl}}"], "path": ["api", "reports", "monthly.pdf"] },
+            "description": "Returns a ReportLab-generated PDF. In Postman, use 'Send and Download' to save it."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api", "health"] }
+          }
+        }
+      ]
+    }
+  ]
+}
