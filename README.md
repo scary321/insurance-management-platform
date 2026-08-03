@@ -7,17 +7,16 @@ A full-stack insurance administration system: register customers, issue and rene
 
 ### Demo logins
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Administrator | admin@insure.dev | admin123 |
-| Agent | agent@insure.dev | agent123 |
-| Customer | customer@insure.dev | customer123 |
+| Role          | Email               | Password    |
+| ------------- | ------------------- | ----------- |
+| Administrator | admin@insure.dev    | admin123    |
+| Agent         | agent@insure.dev    | agent123    |
+| Customer      | customer@insure.dev | customer123 |
 
 > The API runs on Render's free tier and sleeps after a period of inactivity. The first request after idle takes 30–50 seconds to wake the service — subsequent requests are fast.
 
-<!-- Add a dashboard screenshot here:
+Add a dashboard screenshot here:
 ![Dashboard](docs/screenshot-dashboard.png)
--->
 
 ---
 
@@ -29,31 +28,31 @@ A full-stack insurance administration system: register customers, issue and rene
 
 ## Modules
 
-| Module | What it does |
-| --- | --- |
-| Auth | JWT login, three roles (administrator / agent / customer) |
-| Customers | Register, search, update, view history (staff only) |
-| Policies | Issue, list/filter by status, renew, cancel, auto-expire |
-| Claims | Submit, review (approve / reject) with notes |
-| Premiums | Record payments, track paid / pending / overdue |
-| Documents | Upload (pdf/img/doc), list per customer, secure download |
-| Reports | Live dashboard summary + server-generated monthly PDF (ReportLab) |
+| Module    | What it does                                                      |
+| --------- | ----------------------------------------------------------------- |
+| Auth      | JWT login, three roles (administrator / agent / customer)         |
+| Customers | Register, search, update, view history (staff only)               |
+| Policies  | Issue, list/filter by status, renew, cancel, auto-expire          |
+| Claims    | Submit, review (approve / reject) with notes                      |
+| Premiums  | Record payments, track paid / pending / overdue                   |
+| Documents | Upload (pdf/img/doc), list per customer, secure download          |
+| Reports   | Live dashboard summary + server-generated monthly PDF (ReportLab) |
 
 ## Roles and access
 
 Three roles share one login screen; the UI and the API both adapt to the signed-in role.
 
-| Capability | Administrator | Agent | Customer |
-| --- | :---: | :---: | :---: |
-| Dashboard & reports | ✓ | ✓ | — |
-| Manage customer registry | ✓ | ✓ | — |
-| Create / renew / cancel policies | ✓ | ✓ | — |
-| Record premium payments | ✓ | ✓ | — |
-| Approve / reject claims | ✓ | ✓ | — |
-| View own policies & premiums | ✓ | ✓ | ✓ |
-| Submit a claim on an own policy | ✓ | ✓ | ✓ |
-| Upload / download own documents | ✓ | ✓ | ✓ |
-| List all users | ✓ | — | — |
+| Capability                       | Administrator | Agent | Customer |
+| -------------------------------- | :-----------: | :---: | :------: |
+| Dashboard & reports              |       ✓       |   ✓   |    —     |
+| Manage customer registry         |       ✓       |   ✓   |    —     |
+| Create / renew / cancel policies |       ✓       |   ✓   |    —     |
+| Record premium payments          |       ✓       |   ✓   |    —     |
+| Approve / reject claims          |       ✓       |   ✓   |    —     |
+| View own policies & premiums     |       ✓       |   ✓   |    ✓     |
+| Submit a claim on an own policy  |       ✓       |   ✓   |    ✓     |
+| Upload / download own documents  |       ✓       |   ✓   |    ✓     |
+| List all users                   |       ✓       |   —   |    —     |
 
 ---
 
