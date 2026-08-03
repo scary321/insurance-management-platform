@@ -30,6 +30,8 @@ def register():
 
     if User.query.filter_by(email=data["email"]).first():
         return error("An account with that email already exists.", 409)
+    if requested_role == Role.CUSTOMER and Customer.query.filter_by(email=data["email"]).first():
+        return error("An account with that email already exists.", 409)
 
     user = User(name=data["name"], email=data["email"], role=requested_role)
     user.set_password(data["password"])

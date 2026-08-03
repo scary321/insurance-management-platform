@@ -17,6 +17,13 @@ export function AuthProvider({ children }) {
     setUser(user);
     return user;
   }, []);
+  const register = useCallback(
+    async (name, email, password) => {
+      await api.post("/api/auth/register", { name, email, password });
+      return login(email, password);
+    },
+    [login],
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("imp_token");
@@ -24,10 +31,11 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
-  const isStaff = user && (user.role === "administrator" || user.role === "agent");
+  const isStaff =
+    user && (user.role === "administrator" || user.role === "agent");
 
   return (
-    <AuthContext.Provider value={{ user, isStaff, login, logout }}>
+    <AuthContext.Provider value={{ user, isStaff, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

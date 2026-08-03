@@ -1,3 +1,4 @@
+import Register from "./pages/Register.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -22,7 +23,11 @@ export default function App() {
   const { user, isStaff } = useAuth();
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <Login />}
+      />
+      <Route path="/register" element={<Register />} />
       <Route
         element={
           <ProtectedRoute>
@@ -31,12 +36,26 @@ export default function App() {
         }
       >
         <Route path="/" element={isStaff ? <Dashboard /> : <CustomerHome />} />
-        <Route path="/customers" element={<StaffRoute><Customers /></StaffRoute>} />
+        <Route
+          path="/customers"
+          element={
+            <StaffRoute>
+              <Customers />
+            </StaffRoute>
+          }
+        />
         <Route path="/policies" element={<Policies />} />
         <Route path="/claims" element={<Claims />} />
         <Route path="/premiums" element={<Premiums />} />
         <Route path="/documents" element={<Documents />} />
-        <Route path="/reports" element={<StaffRoute><Reports /></StaffRoute>} />
+        <Route
+          path="/reports"
+          element={
+            <StaffRoute>
+              <Reports />
+            </StaffRoute>
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

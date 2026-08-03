@@ -4,29 +4,35 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { apiMessage } from "../api/client.js";
 import Field from "../components/Field.jsx";
 
-const DEMO = [
-  ["Administrator", "admin@insure.dev", "admin123"],
-  ["Agent", "agent@insure.dev", "agent123"],
-  ["Customer", "customer@insure.dev", "customer123"],
-];
-
-export default function Login() {
-  const { login } = useAuth();
+export default function Register() {
+  const { register } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("admin@insure.dev");
-  const [password, setPassword] = useState("admin123");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit(e) {
     e.preventDefault();
     setError("");
+
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
     setBusy(true);
     try {
-      await login(email, password);
+      await register(name, email, password);
       navigate("/");
     } catch (err) {
-      setError(apiMessage(err, "Unable to sign in."));
+      setError(apiMessage(err, "Unable to create account."));
     } finally {
       setBusy(false);
     }
@@ -43,11 +49,11 @@ export default function Login() {
         <div>
           <div className="label text-white/40 mb-3">Policy Ledger</div>
           <h1 className="font-display text-4xl leading-tight max-w-md">
-            Every policy, claim and premium in one accountable place.
+            Your policies, premiums and claims — in one place.
           </h1>
           <p className="mt-4 text-white/55 text-sm max-w-sm">
-            Register customers, issue policies, track premiums and settle claims
-            — from first contact to final payout.
+            Create a customer account to view your policies, track premium
+            payments, submit claims and manage your documents.
           </p>
         </div>
         <div className="font-mono text-xs text-white/30">
@@ -62,12 +68,22 @@ export default function Login() {
             <span className="inline-block h-6 w-1 rounded-full bg-bronze" />
             <span className="font-display text-lg text-ink">Assured</span>
           </div>
-          <h2 className="font-display text-2xl text-ink">Sign in</h2>
+          <h2 className="font-display text-2xl text-ink">Create account</h2>
           <p className="text-sm text-ink/50 mt-1 mb-6">
-            Use a demo account below to explore.
+            Customer accounts only. Staff accounts are created by an
+            administrator.
           </p>
 
           <form onSubmit={submit} className="space-y-4">
+            <Field label="Full name">
+              <input
+                className="input"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </Field>
             <Field label="Email">
               <input
                 className="input"
@@ -86,38 +102,30 @@ export default function Login() {
                 required
               />
             </Field>
+            <Field label="Confirm password">
+              <input
+                className="input"
+                type="password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                required
+              />
+            </Field>
             {error && (
               <div className="rounded-lg bg-danger/10 text-danger text-sm px-3 py-2">
                 {error}
               </div>
             )}
             <button className="btn-primary w-full" disabled={busy}>
-              {busy ? "Signing in…" : "Sign in"}
+              {busy ? "Creating account…" : "Create account"}
             </button>
           </form>
-          <div className="mt-4 text-sm text-ink/60">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-teal hover:underline">
-              Create one
+
+          <div className="mt-6 border-t border-line pt-4 text-sm text-ink/60">
+            Already have an account?{" "}
+            <Link to="/login" className="text-teal hover:underline">
+              Sign in
             </Link>
-          </div>
-          <div className="mt-6 border-t border-line pt-4">
-            <div className="label mb-2">Demo accounts</div>
-            <div className="space-y-1.5">
-              {DEMO.map(([role, e, p]) => (
-                <button
-                  key={e}
-                  onClick={() => {
-                    setEmail(e);
-                    setPassword(p);
-                  }}
-                  className="w-full flex items-center justify-between rounded-lg border border-line bg-white px-3 py-2 text-left hover:border-teal transition-colors"
-                >
-                  <span className="text-sm text-ink/80">{role}</span>
-                  <span className="font-mono text-xs text-ink/45">{e}</span>
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       </div>
