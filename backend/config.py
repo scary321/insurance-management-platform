@@ -37,7 +37,7 @@ class Config:
     ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg", "doc", "docx"}
 
     # Comma-separated list of allowed browser origins. "*" allows any (dev default).
-    CORS_ORIGINS = "*"
+    CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",")]
 
 
 class DevelopmentConfig(Config):
