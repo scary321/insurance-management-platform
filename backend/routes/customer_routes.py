@@ -10,7 +10,6 @@ from utils.responses import success, error
 
 bp = Blueprint("customers", __name__, url_prefix="/api/customers")
 
-
 @bp.get("")
 @role_required(Role.ADMIN, Role.AGENT)
 def list_customers():
@@ -30,7 +29,6 @@ def list_customers():
         [c.to_dict(with_counts=True) for c in pag.items],
         total=pag.total, page=page, per_page=per_page, pages=pag.pages,
     )
-
 
 @bp.post("")
 @role_required(Role.ADMIN, Role.AGENT)
