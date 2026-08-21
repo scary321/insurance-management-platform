@@ -8,7 +8,6 @@ class PaymentStatus:
     OVERDUE = "overdue"
     ALL = (PAID, PENDING, OVERDUE)
 
-
 class PremiumPayment(db.Model):
     __tablename__ = "premium_payments"
 
