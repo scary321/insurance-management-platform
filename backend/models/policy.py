@@ -8,7 +8,6 @@ class PolicyStatus:
     CANCELLED = "cancelled"
     ALL = (ACTIVE, EXPIRED, CANCELLED)
 
-
 class Policy(db.Model):
     __tablename__ = "policies"
 
