@@ -8,7 +8,6 @@ class ClaimStatus:
     REJECTED = "rejected"
     ALL = (PENDING, APPROVED, REJECTED)
 
-
 class Claim(db.Model):
     __tablename__ = "claims"
 
