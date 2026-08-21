@@ -1,7 +1,6 @@
 from marshmallow import Schema, fields, validate
 from models import PaymentStatus
 
-
 class PremiumSchema(Schema):
     policy_id = fields.Int(required=True)
     amount = fields.Decimal(required=True, as_string=False)
