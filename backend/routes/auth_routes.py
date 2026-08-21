@@ -53,7 +53,7 @@ def login():
     try:
         data = LoginSchema().load(request.get_json() or {})
     except ValidationError as e:
-        return error("Validation failed", 422, errors=e.messages)
+        return error("Validation failed", 422,errors=e.messages)
 
     user = User.query.filter_by(email=data["email"]).first()
     if not user or not user.check_password(data["password"]):
@@ -63,7 +63,7 @@ def login():
         identity=str(user.id),
         additional_claims={"role": user.role, "name": user.name, "customer_id": user.customer_id},
     )
-    return success({"token": token, "user": user.to_dict()}, "Signed in")
+    return success({"token": token, "user": user.to_dict()},"Signed in")
 
 
 @bp.get("/me")
